@@ -8,3 +8,4 @@ Pillow
 supabase-py
 python-docx
 python-dotenv
+reportlab
