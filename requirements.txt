@@ -1,9 +1,0 @@
-streamlit
-pandas
-openai
-pdfplumber
-pytesseract
-Pillow
-python-dotenv
-reportlab
-supabase
