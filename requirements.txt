@@ -4,7 +4,6 @@ openai
 pdfplumber
 pytesseract
 Pillow
-python-docx
 python-dotenv
 reportlab
-streamlit-authenticator
+supabase

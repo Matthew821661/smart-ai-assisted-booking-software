@@ -9,7 +9,6 @@ def classify_transactions(text, doc_type="bank"):
             date = datetime.today().strftime("%Y-%m-%d")
             desc = line.strip()
             amount = 1000
-
             if doc_type == "invoice":
                 if "vat" in desc.lower():
                     ledger_entries.append({"Date": date, "Account": "VAT Payable (15%)", "Description": desc, "Debit": 0, "Credit": amount * 0.15})

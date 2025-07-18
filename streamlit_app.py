@@ -3,14 +3,14 @@ import pandas as pd
 from utils.ocr import extract_text_from_pdf
 from utils.classifier import classify_transactions, generate_trial_balance, calculate_vat, reconcile_bank
 from utils.exporter import export_pdf_report
-from utils.auth import authenticate_user
+from utils.supabase_auth import login_user, upload_to_supabase, list_uploaded_files
 
-st.set_page_config(page_title="AI Bookkeeping SaaS v4", layout="wide")
-st.title("AI Bookkeeping SaaS - v4 (Multi-Client, VAT, Reconciliation)")
+st.set_page_config(page_title="AI Bookkeeping SaaS v5", layout="wide")
+st.title("AI Bookkeeping SaaS - v5 (Supabase Login + Cloud Storage)")
 
-# --- Login ---
-user = authenticate_user()
-if not user:
+# --- User Login ---
+user_email = login_user()
+if not user_email:
     st.stop()
 
 st.sidebar.header("Upload Documents")
@@ -29,7 +29,7 @@ if uploaded_file:
     st.dataframe(ledger_df)
 
     if not flagged_df.empty:
-        st.subheader("⚠️ Flagged Transactions for Human Review")
+        st.subheader("⚠️ Flagged Transactions")
         st.dataframe(flagged_df)
 
     st.subheader("📊 Trial Balance")
@@ -40,15 +40,25 @@ if uploaded_file:
     vat_df = calculate_vat(ledger_df)
     st.dataframe(vat_df)
 
-    st.subheader("🔗 Bank Reconciliation")
-    reconciliation = reconcile_bank(ledger_df)
-    st.dataframe(reconciliation)
+    st.subheader("🔄 Bank Reconciliation")
+    rec_df = reconcile_bank(ledger_df)
+    st.dataframe(rec_df)
 
-    st.download_button("📥 Download General Ledger (CSV)", ledger_df.to_csv(index=False), "general_ledger.csv")
-    st.download_button("📥 Download Trial Balance (CSV)", tb_df.to_csv(index=False), "trial_balance.csv")
-    st.download_button("📥 Download VAT Summary (CSV)", vat_df.to_csv(index=False), "vat_summary.csv")
+    # Store file in Supabase
+    if st.button("📤 Upload Ledger to Cloud"):
+        upload_to_supabase(user_email, ledger_df)
 
-    if st.button("📥 Download Full PDF Report"):
+    # Report downloads
+    st.download_button("Download GL (CSV)", ledger_df.to_csv(index=False), "general_ledger.csv")
+    st.download_button("Download TB (CSV)", tb_df.to_csv(index=False), "trial_balance.csv")
+    st.download_button("Download VAT (CSV)", vat_df.to_csv(index=False), "vat_summary.csv")
+
+    if st.button("📥 PDF Financial Report"):
         pdf_path = export_pdf_report(ledger_df, tb_df, vat_df)
-        with open(pdf_path, "rb") as file:
-            st.download_button("Download PDF Report", file, "financial_report.pdf")
+        with open(pdf_path, "rb") as f:
+            st.download_button("Download Report", f, "financial_report.pdf")
+
+# List historical uploads
+st.sidebar.subheader("📂 Upload History")
+files = list_uploaded_files(user_email)
+st.sidebar.write(files)
