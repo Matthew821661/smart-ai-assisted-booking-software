@@ -2,10 +2,10 @@ streamlit
 pandas
 openai
 pdfplumber
-tesserocr
 pytesseract
 Pillow
 supabase-py
 python-docx
 python-dotenv
 reportlab
+streamlit-authenticator
