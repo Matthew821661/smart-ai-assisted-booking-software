@@ -1,0 +1,6 @@
+streamlit
+supabase-py
+openai
+pandas
+pdfplumber
+python-dotenv
