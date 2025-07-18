@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from utils.ocr import extract_text_from_pdf
 from utils.classifier import classify_transactions, generate_trial_balance, calculate_vat, reconcile_bank
+from utils.db import insert_gl_entries, log_upload
 from utils.exporter import export_pdf_report
 from utils.supabase_auth import login_user, upload_to_supabase, list_uploaded_files
 
@@ -47,6 +48,8 @@ if uploaded_file:
     # Store file in Supabase
     if st.button("📤 Upload Ledger to Cloud"):
         upload_to_supabase(user_email, ledger_df)
+        insert_gl_entries(user_email, ledger_df)
+        log_upload(user_email, 'ledger.csv')
 
     # Report downloads
     st.download_button("Download GL (CSV)", ledger_df.to_csv(index=False), "general_ledger.csv")
