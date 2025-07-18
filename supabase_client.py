@@ -1,1 +1,0 @@
-# Dummy supabase client file
