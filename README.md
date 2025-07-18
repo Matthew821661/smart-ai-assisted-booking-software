@@ -1,1 +1,3 @@
-# smart-ai-assisted-booking-software
+# AI Bookkeeping SaaS v9
+
+Setup and usage instructions.
