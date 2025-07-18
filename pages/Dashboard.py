@@ -10,4 +10,3 @@ st.markdown("""
 - Let AI classify transactions
 - Review and export trial balance
 """)
-

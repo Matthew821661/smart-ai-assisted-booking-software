@@ -1,6 +1,5 @@
 streamlit
-supabase-py
-openai
 pandas
-pdfplumber
+openpyxl
 python-dotenv
+supabase
